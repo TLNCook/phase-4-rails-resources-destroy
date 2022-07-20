@@ -6,12 +6,7 @@ class BirdsController < ApplicationController
     render json: birds
   end
 
-  # POST /birds
-  def create
-    bird = Bird.create(bird_params)
-    render json: bird, status: :created
-  end
-
+  
   # GET /birds/:id
   def show
     bird = Bird.find_by(id: params[:id])
@@ -20,6 +15,12 @@ class BirdsController < ApplicationController
     else
       render json: { error: "Bird not found" }, status: :not_found
     end
+  end
+  
+  # POST /birds
+  def create
+    bird = Bird.create(bird_params)
+    render json: bird, status: :created
   end
 
   # PATCH /birds/:id
@@ -39,6 +40,16 @@ class BirdsController < ApplicationController
     if bird
       bird.update(likes: bird.likes + 1)
       render json: bird
+    else
+      render json: { error: "Bird not found" }, status: :not_found
+    end
+  end
+
+  def destroy
+    bird = Bird.find_by(id: params[:id])
+    if bird
+      bird.destroy
+      head :no_content
     else
       render json: { error: "Bird not found" }, status: :not_found
     end
